@@ -106,6 +106,7 @@ app.all('*', (req, res) => {
 
 // Client requests
 app.all('/login', isUserAuthenticated, (req, res) => {
+    console.log("trying to sign in...")
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
         if (user) {
