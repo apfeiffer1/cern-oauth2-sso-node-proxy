@@ -86,6 +86,7 @@ app.get('/logout', (req, res) => {
     req.session.destroy(function() {
         res.clearCookie('connect.sid');
         res.redirect('https://login.cern.ch/adfs/ls/?wa=wsignout1.0');
+        res.redirect('/');
     });
 });
 app.get('/error', (req, res) => {
