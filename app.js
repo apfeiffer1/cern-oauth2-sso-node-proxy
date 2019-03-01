@@ -91,6 +91,13 @@ app.get('/error', (req, res) => {
     res.send('Error authenticating user');
 });
 
+// non Authenticated user
+app.get('/blabla', (req, res) => {
+    proxy.web(req, res, {
+        target: process.env.CLIENT_URL
+    });
+});
+
 // Client requests
 app.all('*', isUserAuthenticated, (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
