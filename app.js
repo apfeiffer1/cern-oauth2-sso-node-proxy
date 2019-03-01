@@ -63,10 +63,17 @@ passport.deserializeUser(function(user, done) {
 // Middleware to check if the user is authenticated
 function isUserAuthenticated(req, res, next) {
     if (req.user) {
-        next();
+        return next();
     } else {
-        // res.redirect('/callback');
-        res.redirect('https://login.cern.ch/adfs/ls/?wa=wsignin1.0');
+        res.redirect('/callback');
+    }
+}
+
+function UserAuth(req, res) {
+    if (req.user) {
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -96,7 +103,11 @@ app.get('/error', (req, res) => {
 // non Authenticated user
 app.all('*', (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
-        proxyReq.setHeader('authenticated', false);
+        if (UserAuth) {
+            proxyReq.setHeader('authenticated', true);
+        } else {
+            proxyReq.setHeader('authenticated', false);
+        }
     });
     proxy.web(req, res, {
         target: process.env.CLIENT_URL
@@ -104,8 +115,7 @@ app.all('*', (req, res) => {
 });
 
 // Client requests
-app.all('/login', isUserAuthenticated, (req, res) => {
-    console.log("trying to sign in...")
+app.get('/login', isUserAuthenticated, (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
         if (user) {
