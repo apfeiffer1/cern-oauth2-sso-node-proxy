@@ -94,10 +94,7 @@ app.get('/error', (req, res) => {
 // non Authenticated user
 app.all('*', (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
-        const { user } = req;
-        if (user) {
-            proxyReq.setHeader('authenticated', false);
-        }
+        proxyReq.setHeader('authenticated', false);
     });
     proxy.web(req, res, {
         target: process.env.CLIENT_URL
