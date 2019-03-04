@@ -69,14 +69,6 @@ function isUserAuthenticated(req, res, next) {
     }
 }
 
-function UserAuth(req, res) {
-    if (req.user) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 app.get(
     '/callback',
     passport.authenticate('oauth2', {
@@ -98,7 +90,7 @@ app.get('/logout', function(req, res, next) {
             } else {
                 res.clearCookie('connect.sid');
                 res.redirect('https://login.cern.ch/adfs/ls/?wa=wsignout1.0');
-                return res.redirect('/');
+                return res.redirect('/callback');
             }
         });
     }
@@ -127,7 +119,11 @@ app.get('/login', isUserAuthenticated, (req, res) => {
 // non Authenticated user
 app.all('*', (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
-        proxyReq.setHeader('authenticated', UserAuth);
+        if (req.user) {
+            proxyReq.setHeader('authenticated', true);
+        } else {
+            proxyReq.setHeader('authenticated', false);
+        }
     });
     proxy.web(req, res, {
         target: process.env.CLIENT_URL
