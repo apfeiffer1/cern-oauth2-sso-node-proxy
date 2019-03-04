@@ -99,20 +99,6 @@ app.get('/error', (req, res) => {
     res.send('Error authenticating user');
 });
 
-// non Authenticated user
-app.all('*', (req, res) => {
-    proxy.on('proxyReq', (proxyReq, req, res, options) => {
-        if (UserAuth) {
-            proxyReq.setHeader('authenticated', true);
-        } else {
-            proxyReq.setHeader('authenticated', false);
-        }
-    });
-    proxy.web(req, res, {
-        target: process.env.CLIENT_URL
-    });
-});
-
 // Client requests
 app.get('/login', isUserAuthenticated, (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
@@ -123,6 +109,20 @@ app.get('/login', isUserAuthenticated, (req, res) => {
             proxyReq.setHeader('email', user.email);
             proxyReq.setHeader('id', user.id);
             proxyReq.setHeader('authenticated', true);
+        }
+    });
+    proxy.web(req, res, {
+        target: process.env.CLIENT_URL
+    });
+});
+
+// non Authenticated user
+app.all('*', (req, res) => {
+    proxy.on('proxyReq', (proxyReq, req, res, options) => {
+        if (UserAuth) {
+            proxyReq.setHeader('authenticated', true);
+        } else {
+            proxyReq.setHeader('authenticated', false);
         }
     });
     proxy.web(req, res, {
