@@ -100,7 +100,7 @@ app.get('/error', (req, res) => {
 });
 
 // Client requests
-app.get('/login', isUserAuthenticated, (req, res) => {
+app.all('/login', isUserAuthenticated, (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
         if (user) {
