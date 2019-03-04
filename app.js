@@ -65,7 +65,7 @@ function isUserAuthenticated(req, res, next) {
     if (req.user) {
         return next();
     } else {
-        res.redirect('https://login.cern.ch/adfs/ls/?wa=wsignin1.0');
+        return res.redirect('/callback');
     }
 }
 
