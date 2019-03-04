@@ -110,6 +110,8 @@ app.get('/login', isUserAuthenticated, (req, res) => {
             proxyReq.setHeader('email', user.email);
             proxyReq.setHeader('id', user.id);
             proxyReq.setHeader('authenticated', true);
+        } else {
+            proxyReq.setHeader('authenticated', false);
         }
     });
     proxy.web(req, res, {
