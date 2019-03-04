@@ -91,45 +91,8 @@ app.get('/error', (req, res) => {
     res.send('Error authenticating user');
 });
 
-// // Client requests
-// app.get('/login', isUserAuthenticated, (req, res) => {
-//     proxy.on('proxyReq', (proxyReq, req, res, options) => {
-//         const { user } = req;
-//         if (user) {
-//             proxyReq.setHeader('displayname', user.displayname);
-//             proxyReq.setHeader('egroups', user.egroups);
-//             proxyReq.setHeader('email', user.email);
-//             proxyReq.setHeader('id', user.id);
-//             proxyReq.setHeader('authenticated', true);
-//         } else {
-//             proxyReq.setHeader('authenticated', false);
-//         }
-//     });
-//     proxy.web(req, res, {
-//         target: process.env.CLIENT_URL
-//     });
-// });
-
-// // non Authenticated user
-// app.all('*', OAuth2Strategy.optional, (req, res) => {
-//     proxy.on('proxyReq', (proxyReq, req, res, options) => {
-//         const { user } = req;
-//         if (user) {
-//             proxyReq.setHeader('displayname', user.displayname);
-//             proxyReq.setHeader('egroups', user.egroups);
-//             proxyReq.setHeader('email', user.email);
-//             proxyReq.setHeader('id', user.id);
-//             proxyReq.setHeader('authenticated', true);
-//         } else {
-//             proxyReq.setHeader('authenticated', false);
-//         }
-//     });
-//     proxy.web(req, res, {
-//         target: process.env.CLIENT_URL
-//     });
-// });
 // Client requests
-app.all('*', isUserAuthenticated, (req, res) => {
+app.get('/login', isUserAuthenticated, (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
         if (user) {
@@ -137,6 +100,24 @@ app.all('*', isUserAuthenticated, (req, res) => {
             proxyReq.setHeader('egroups', user.egroups);
             proxyReq.setHeader('email', user.email);
             proxyReq.setHeader('id', user.id);
+            proxyReq.setHeader('authenticated', true);
+        }
+    });
+    proxy.web(req, res, {
+        target: process.env.CLIENT_URL
+    });
+});
+
+// non Authenticated user
+app.all('*', OAuth2Strategy.optional, (req, res) => {
+    proxy.on('proxyReq', (proxyReq, req, res, options) => {
+        const { user } = req;
+        if (user) {
+            proxyReq.setHeader('displayname', user.displayname);
+            proxyReq.setHeader('egroups', user.egroups);
+            proxyReq.setHeader('email', user.email);
+            proxyReq.setHeader('id', user.id);
+            proxyReq.setHeader('authenticated', isUserAuthenticated);
         }
     });
     proxy.web(req, res, {
