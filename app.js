@@ -120,6 +120,7 @@ app.get('/login', isUserAuthenticated, (req, res) => {
 app.all('*', (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
+        console.log('USER:', user)
         if (user) {
             proxyReq.setHeader('displayname', user.displayname);
             proxyReq.setHeader('egroups', user.egroups);
@@ -145,3 +146,4 @@ proxy.on('error', function(err, req, res) {
 });
 
 app.listen(port, () => console.log(`OAUTH Proxy started on port ${port}`));
+authe
