@@ -109,21 +109,21 @@ app.get('/login', isUserAuthenticated, (req, res) => {
 });
 
 // non Authenticated user
-app.all('*', OAuth2Strategy.optional, (req, res) => {
-    proxy.on('proxyReq', (proxyReq, req, res, options) => {
-        const { user } = req;
-        if (user) {
-            proxyReq.setHeader('displayname', user.displayname);
-            proxyReq.setHeader('egroups', user.egroups);
-            proxyReq.setHeader('email', user.email);
-            proxyReq.setHeader('id', user.id);
-            proxyReq.setHeader('authenticated', isUserAuthenticated);
-        }
-    });
-    proxy.web(req, res, {
-        target: process.env.CLIENT_URL
-    });
-});
+// app.all('*', OAuth2Strategy.optional, (req, res) => {
+//     proxy.on('proxyReq', (proxyReq, req, res, options) => {
+//         const { user } = req;
+//         if (user) {
+//             proxyReq.setHeader('displayname', user.displayname);
+//             proxyReq.setHeader('egroups', user.egroups);
+//             proxyReq.setHeader('email', user.email);
+//             proxyReq.setHeader('id', user.id);
+//             proxyReq.setHeader('authenticated', isUserAuthenticated);
+//         }
+//     });
+//     proxy.web(req, res, {
+//         target: process.env.CLIENT_URL
+//     });
+// });
 
 // If something goes wrong on either API or client:
 proxy.on('error', function(err, req, res) {
