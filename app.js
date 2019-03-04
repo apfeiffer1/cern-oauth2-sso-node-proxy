@@ -120,7 +120,7 @@ app.get('/login', isUserAuthenticated, (req, res) => {
 });
 
 // non Authenticated user
-app.all('*', (req, res) => {
+app.all('*', OAuth2Strategy.optional, (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
         if (user) {
