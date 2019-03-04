@@ -119,7 +119,12 @@ app.get('/login', isUserAuthenticated, (req, res) => {
 // non Authenticated user
 app.all('*', (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
-        if (req.user) {
+        const { user } = req;
+        if (user) {
+            proxyReq.setHeader('displayname', user.displayname);
+            proxyReq.setHeader('egroups', user.egroups);
+            proxyReq.setHeader('email', user.email);
+            proxyReq.setHeader('id', user.id);
             proxyReq.setHeader('authenticated', true);
         } else {
             proxyReq.setHeader('authenticated', false);
