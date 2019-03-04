@@ -148,4 +148,3 @@ proxy.on('error', function(err, req, res) {
 });
 
 app.listen(port, () => console.log(`OAUTH Proxy started on port ${port}`));
-authe
