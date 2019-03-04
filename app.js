@@ -89,10 +89,11 @@ app.get('/logout', function(req, res, next) {
                 return next(err);
             } else {
                 res.clearCookie('connect.sid');
-                res.redirect('https://login.cern.ch/adfs/ls/?wa=wsignout1.0');
-                return res.redirect('/callback');
+                return res.redirect('https://login.cern.ch/adfs/ls/?wa=wsignout1.0');
             }
         });
+    } else {
+        res.redirect('/');
     }
 });
 app.get('/error', (req, res) => {
@@ -120,7 +121,6 @@ app.get('/login', isUserAuthenticated, (req, res) => {
 app.all('*', (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
-        console.log('USER:', user)
         if (user) {
             proxyReq.setHeader('displayname', user.displayname);
             proxyReq.setHeader('egroups', user.egroups);
