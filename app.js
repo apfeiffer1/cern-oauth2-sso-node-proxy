@@ -63,9 +63,9 @@ passport.deserializeUser(function(user, done) {
 // Middleware to check if the user is authenticated
 function isUserAuthenticated(req, res, next) {
     if (req.user) {
-        return next();
+        next();
     } else {
-        return res.redirect('/callback');
+        res.redirect('/callback');
     }
 }
 
