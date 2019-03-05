@@ -81,15 +81,15 @@ app.get(
         request('https://test-cms-career.web.cern.ch/api/cms_hr/' + user.id, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 const cms_id = body['cms_id'];
+                if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
+                    res.redirect('/user?user=' + cms_id);
+                } else {
+                    res.redirect('/');
+                }
             } else {
-                const cms_id = undefined;
+                res.redirect('/error')
             }
         })
-        if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
-            res.redirect('/user?user=' + cms_id);
-        } else {
-            res.redirect('/');
-        }
     }
 );
 
