@@ -85,8 +85,13 @@ app.get(
         failureRedirect: '/error'
     }),
     function(req, res) {
-        console.log(req.user.displayName);
-        res.redirect('/');
+        console.log(getCookie('cms_id'));
+        var cms_id = getCookie('cms_id');
+        if (cms_id != '') {
+            res.redirect('/user?user=' + cms_id)
+        } else {
+            res.redirect('/')
+        }
     }
 );
 
@@ -121,12 +126,6 @@ app.get('/login', isUserAuthenticated, (req, res) => {
     proxy.web(req, res, {
         target: process.env.CLIENT_URL
     });
-    var cms_id = getCookie('cms_id');
-    if (cms_id != '') {
-        res.redirect('/user?user=' + cms_id)
-    } else {
-        res.redirect('/')
-    }
 });
 
 // non Authenticated user
