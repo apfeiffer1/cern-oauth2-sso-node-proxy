@@ -7,6 +7,7 @@ const httpProxy = require('http-proxy');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const request = require('request');
 const port = 8080;
 
 const proxy = httpProxy.createProxyServer({});
@@ -69,8 +70,6 @@ function isUserAuthenticated(req, res, next) {
     }
 }
 
-const request = require('request');
-
 app.get(
     '/callback',
     passport.authenticate('oauth2', {
@@ -80,11 +79,13 @@ app.get(
         const { user } = req;
 
         console.log('URL:', '/api/cms_hr/' + user.id)
-        request('/api/cms_hr/' + user.id, function (error, response, body) {
+        request('https://test-cms-career.web.cern.ch/api/cms_hr/' + user.id, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 console.log('Body:', body)
                 const cms_id = body['cms_id'];
-             }
+            } else {
+                console.log('ERROR:::', error)
+            }
         });
 
         console.log('CMS_ID:', cms_id)
