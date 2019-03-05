@@ -69,6 +69,16 @@ function isUserAuthenticated(req, res, next) {
     }
 }
 
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) {
+        return parts.pop().split(";").shift();
+    } else {
+        return null;
+    }
+}
+
 app.get(
     '/callback',
     passport.authenticate('oauth2', {
@@ -111,6 +121,12 @@ app.get('/login', isUserAuthenticated, (req, res) => {
     proxy.web(req, res, {
         target: process.env.CLIENT_URL
     });
+    var cms_id = getCookie('cms_id');
+    if (cms_id != '') {
+        res.redirect('/user?user=' + cms_id)
+    } else {
+        res.redirect('/')
+    }
 });
 
 // non Authenticated user
