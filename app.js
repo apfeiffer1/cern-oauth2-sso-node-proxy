@@ -76,11 +76,17 @@ app.get(
     }),
     function(req, res) {
         const { user } = req;
-        http.get('/api/cms_hr/' + user.id).then(response => {
-            const cms_id = response.body['cms_id'];
-        }, response => {
-            const cms_id = '';
-        });
+        var options = {
+            host: 'test-cms-career.web.cern.ch',
+            path: '/api/cms_hr/' + user.id,
+            method: 'GET'
+        };
+        http.request(options, function(res) {
+          res.setEncoding('utf8');
+          res.on('data', function (chunk) {
+            const cms_id = chunk;
+          });
+        }).end();
 
         console.log('CMS_ID:', cms_id)
         if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
