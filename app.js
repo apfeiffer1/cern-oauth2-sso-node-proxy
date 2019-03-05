@@ -77,7 +77,7 @@ app.get(
     function(req, res) {
         var cms_id = req.cookies['cms_id'];
         console.log('CMS_ID:', cms_id)
-        if (cms_id !== '' && cms_id !== null) {
+        if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
             res.redirect('/user?user=' + cms_id);
         } else {
             res.redirect('/');
