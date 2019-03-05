@@ -82,6 +82,7 @@ app.get(
             if (!error && response.statusCode == 200) {
                 const cms_id = body['cms_id'];
                 console.log('CMS_ID:', cms_id)
+                console.log('BODY:', body)
                 if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
                     res.redirect('/user?user=' + cms_id);
                 } else {
