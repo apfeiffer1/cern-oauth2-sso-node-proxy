@@ -69,28 +69,18 @@ function isUserAuthenticated(req, res, next) {
     }
 }
 
-function getCookie(name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) {
-        return parts.pop().split(";").shift();
-    } else {
-        return null;
-    }
-}
-
 app.get(
     '/callback',
     passport.authenticate('oauth2', {
         failureRedirect: '/error'
     }),
     function(req, res) {
-        console.log(getCookie('cms_id'));
-        var cms_id = getCookie('cms_id');
+        console.log(req.cookies['cms_id']);
+        var cms_id = req.cookies['cms_id'];
         if (cms_id != '') {
-            res.redirect('/user?user=' + cms_id)
+            res.redirect('/user?user=' + cms_id);
         } else {
-            res.redirect('/')
+            res.redirect('/');
         }
     }
 );
@@ -101,7 +91,7 @@ app.get('/logout', (req, res) => {
         res.clearCookie('connect.sid');
         res.clearCookie('authenticated');
         res.clearCookie('cms_id');
-        res.redirect('/')
+        res.redirect('/');
     });
 });
 app.get('/error', (req, res) => {
