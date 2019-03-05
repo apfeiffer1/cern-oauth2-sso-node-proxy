@@ -80,8 +80,8 @@ app.get(
 
         request('https://test-cms-career.web.cern.ch/api/cms_hr/' + user.id, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                var cms_id = body.cms_id;
-                console.log('CMS_ID:', cms_id)
+                var cms_id = body.cms_id
+                console.log('CMS_ID:', body.cms_id)
                 console.log('BODY:', body)
                 if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
                     res.redirect('/user?user=' + cms_id);
