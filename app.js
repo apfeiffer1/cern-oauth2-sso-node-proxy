@@ -84,6 +84,7 @@ app.get(
         http.request(options, function(res) {
           res.setEncoding('utf8');
           res.on('data', function (chunk) {
+            console.log('BODY:', chunk);
             const cms_id = chunk;
           });
         }).end();
