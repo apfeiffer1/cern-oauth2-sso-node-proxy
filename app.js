@@ -69,6 +69,8 @@ function isUserAuthenticated(req, res, next) {
     }
 }
 
+const request = require('request');
+
 app.get(
     '/callback',
     passport.authenticate('oauth2', {
@@ -76,18 +78,14 @@ app.get(
     }),
     function(req, res) {
         const { user } = req;
-        var options = {
-            host: 'test-cms-career.web.cern.ch',
-            path: '/api/cms_hr/' + user.id,
-            method: 'GET'
-        };
-        http.request(options, function(res) {
-          res.setEncoding('utf8');
-          res.on('data', function (chunk) {
-            console.log('BODY:', chunk);
-            const cms_id = chunk;
-          });
-        }).end();
+
+        console.log('URL:', '/api/cms_hr/' + user.id)
+        request('/api/cms_hr/' + user.id, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log('Body:', body)
+                const cms_id = body['cms_id'];
+             }
+        });
 
         console.log('CMS_ID:', cms_id)
         if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
