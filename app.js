@@ -111,7 +111,7 @@ app.get('/error', (req, res) => {
 app.get('/login', isUserAuthenticated, (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
-        if (user) {
+        if (user && user.egroups.indexOf('cms-web-access') !== -1) {
             proxyReq.setHeader('displayname', user.displayname);
             proxyReq.setHeader('egroups', user.egroups);
             proxyReq.setHeader('email', user.email);
@@ -130,7 +130,7 @@ app.get('/login', isUserAuthenticated, (req, res) => {
 app.all('*', (req, res) => {
     proxy.on('proxyReq', (proxyReq, req, res, options) => {
         const { user } = req;
-        if (user) {
+        if (user && user.egroups.indexOf('cms-web-access') !== -1) {
             proxyReq.setHeader('displayname', user.displayname);
             proxyReq.setHeader('egroups', user.egroups);
             proxyReq.setHeader('email', user.email);
