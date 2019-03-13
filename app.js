@@ -78,19 +78,23 @@ app.get(
     function(req, res) {
         const { user } = req;
 
-        request('https://test-cms-career.web.cern.ch/api/cms_hr/' + user.id, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                var cms_id = JSON.parse(body)['cms_id'];
-                console.log('CMS_id:', cms_id)
-                if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
-                    res.redirect('/user?user=' + cms_id);
+        if (user && user.egroups.indexOf('cms-web-access') !== -1) {
+            request('https://test-cms-career.web.cern.ch/api/cms_hr/' + user.id, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var cms_id = JSON.parse(body)['cms_id'];
+                    console.log('CMS_id:', cms_id)
+                    if (cms_id !== '' && cms_id !== null && cms_id !== undefined) {
+                        res.redirect('/user?user=' + cms_id);
+                    } else {
+                        res.redirect('/');
+                    }
                 } else {
-                    res.redirect('/');
+                    res.redirect('/error');
                 }
-            } else {
-                res.redirect('/error');
-            }
-        })
+            })
+        } else {
+            res.redirect('/');
+        }
     }
 );
 
