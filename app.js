@@ -78,7 +78,7 @@ app.get(
     function(req, res) {
         const { user } = req;
 
-        request('https://test-cms-career.web.cern.ch/api/cms_hr/' + user.id, function (error, response, body) {
+        request('https://cms-careerInfo.web.cern.ch/api/cms_hr/' + user.id, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var cms_id = JSON.parse(body)['cms_id'];
                 
